@@ -5,7 +5,13 @@ from PyQt5.QtGui import *
 
 qss = """
     QLabel {
-        color: rgb(100, 100, 100);
+        color: rgb(0, 0, 0);
+        border-radius: 3px;
+        background: rgb(213, 213, 213);
+    }
+    QLabel:selected {
+        background: rgb(255, 193, 7);
+        color: rgb(31, 39, 42);
     }
     QPushButton {
         color: rgb(100, 0, 0);
@@ -16,10 +22,10 @@ qss = """
     }
 
     QPushButton#A {
-        background-color: rgb(250, 50, 50);
+        background-color: rgb(237, 104, 104);
     }
     QPushButton#B {
-        background-color: rgb(50, 250,50);
+        background-color: rgb(246, 189,10);
     }
     QPushButton#start:hover {
         color: rgb(100, 100, 100);
@@ -64,30 +70,12 @@ class MyBtn(QPushButton):
 
 
 class MyLabel(QLabel):
-    qss = """
-        QLabel#A {
-            background: rgb(250, 0, 0);
-            border-radius: 3px;
-            font-size: 11px;
-            color: rgb(255, 255, 255);
-        }
-        QLabel#B {
-            background: rgb(0, 250, 0);
-            border-radius: 3px;
-            font-size: 11px;
-            color: rgb(255, 255, 255);
-        }
-        QLabel#AlarmItemInfo:selected {
-            background: rgb(255, 193, 7);
-            color: rgb(31, 39, 42);
-        }
-    """
 
     def __init__(self, parent, txt_name='', prop=''):
         super(MyLabel, self).__init__(parent=parent)
         self.setAttribute(Qt.WA_StyledBackground, True)  # 상위 스타일 상속
         self.parent = parent
-        self.setStyleSheet(self.qss)
+        self.setStyleSheet(qss)
         self.setObjectName(prop)
         self.setText(txt_name)
         # self.dis_update(alarm_info)
@@ -169,26 +157,43 @@ class MyApp(QWidget):
         pbar1 = ProgressbarBtn(self, 0, 0)
         pbar1.setValue(50)  # progressbar 값 세팅 %
         ###############################################################
+
         # diagnosis module table 생성
         alarmtable = AlarmTable(self)
-        # 비정상 절차서 part
+
+        '''
+        비상절차서 part
+        '''
         ex_procedure = '가압기 PORV 개방'
         procedure_label1 = MyLabel(self, txt_name=ex_procedure)
         procedure_label2 = MyLabel(self, txt_name=ex_procedure)
         procedure_label3 = MyLabel(self, txt_name=ex_procedure)
         procedure_label4 = MyLabel(self, txt_name=ex_procedure)
 
-        # w진단 확률 part
+        '''
+        진단확률 part
+        '''
         # 진단확률 색 변화는 if문을 통해 prop에 변수 넣어서 qss로!!
-        prop_para1 = 'A'
-        prop_para2 = 'B'
-        dignosis_percent = 99
-        dig_percent_btn1 = MyBtn(self, txt_name=f'{dignosis_percent}%', prop=prop_para1)
-        dig_percent_btn2 = MyBtn(self, txt_name=f'{dignosis_percent}%', prop=prop_para2)
-        dig_percent_btn3 = MyBtn(self, txt_name=f'{dignosis_percent}%', prop=prop_para1)
-        dig_percent_btn4 = MyBtn(self, txt_name=f'{dignosis_percent}%', prop=prop_para2)
+        dignosis_percent_example = [98, 1, 0.2, 0.1]
+        dignosis_percent_example.sort(reverse=True)  # 내림차순
+        prop_para = []
+        dignosis_percent = []
+        for i in dignosis_percent_example:
+            if i > 90:
+                prop_para_db = 'A'
+            else:
+                prop_para_db = 'B'
+            prop_para.append(prop_para_db)
+            dignosis_percent.append(i)
+        # prop_para1 = 'A'
+        # # prop_para2 = 'B'
+        # dignosis_percent = 99
+        dig_percent_btn1 = MyBtn(self, txt_name=f'{dignosis_percent[0]}%', prop=prop_para[0])
+        dig_percent_btn2 = MyBtn(self, txt_name=f'{dignosis_percent[1]}%', prop=prop_para[1])
+        dig_percent_btn3 = MyBtn(self, txt_name=f'{dignosis_percent[2]}%', prop=prop_para[2])
+        dig_percent_btn4 = MyBtn(self, txt_name=f'{dignosis_percent[3]}%', prop=prop_para[3])
 
-        # 증상 만족 여부 part
+        '''증상만족여부 part'''
         symptom_ok = 6
         symptom_all = 10
         symptom_check1 = MyLabel(self, txt_name=f'{symptom_ok}/{symptom_all}')
