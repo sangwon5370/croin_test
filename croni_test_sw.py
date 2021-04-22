@@ -9,12 +9,19 @@ qss = """
         border-radius: 3px;
         background: rgb(213, 213, 213);
     }
+    QLabel#Title {
+        color: rgb(255, 255, 255);
+        font: bold 15px;
+        border-radius: 3px;
+        background: rgb(31, 39, 42);
+    }
     QLabel:selected {
         background: rgb(255, 193, 7);
         color: rgb(31, 39, 42);
     }
     QPushButton {
-        color: rgb(100, 0, 0);
+        color: rgb(255, 255, 255);
+        background: rgb(31, 39, 42);
     }
     QPushButton:hover {
         color: rgb(255, 255, 255);
@@ -67,6 +74,7 @@ class MyBtn(QPushButton):
     def mousePressEvent(self, e) -> None:
         print(f'{self} Click !! {self.click_count}')
         self.click_count += 1
+
 
 
 class MyLabel(QLabel):
@@ -139,6 +147,8 @@ class AlarmTable(QTableWidget):
 
         self.setHorizontalHeaderLabels(col_names)
         self.horizontalHeader().setStretchLastSection(True)
+
+
 
 
 class MyApp(QWidget):
@@ -220,14 +230,21 @@ class MyApp(QWidget):
         #
         # alarmtable.item(1, 1).setTextAlignment(Qt.AlignCenter | Qt.AlignVCenter)
 
-        layer = QVBoxLayout()
-        layer_db = QHBoxLayout()
+        '''Total Diagnosis table 버튼 part'''
+        dig_table_btn = MyBtn(self, txt_name='Total Diagnosis Table Button')
+
+
+        layer = QVBoxLayout()   #right 전체 틀
+        layer_db = QHBoxLayout()    #right area에 들어갈 hbox 틀
 
         layer_db.addWidget(pbar1)
         layer_db.addWidget(btn1)
         layer_db.addWidget(btn2)
 
+        layer.addWidget(MyLabel(self, txt_name='Diagnosis Module', prop='Title'))
         layer.addWidget(alarmtable)
+        layer.addWidget(dig_table_btn)
+        layer.addWidget(MyLabel(self, txt_name='Prognosis Module', prop='Title'))
         layer.addLayout(layer_db)
 
         self.setLayout(layer)
